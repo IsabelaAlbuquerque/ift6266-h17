@@ -1,5 +1,5 @@
 import numpy as np
-np.random.seed(42)  # for reproducibility
+np.random.seed(42)
 
 from keras.models import Sequential, load_model
 from keras.layers import Dense, Dropout, Activation, Flatten, Reshape
@@ -9,9 +9,9 @@ from keras.callbacks import EarlyStopping, ModelCheckpoint
 from build_minibatch import build_minibatch
 import os.path
 
-batch_size = 128
+batch_size = 32
 nb_outputs = 32*32*3
-nb_epoch = 500
+nb_epoch = 300
 
 # Preparing the training data
 inputs, targets, captions = build_minibatch(0, 50, 1, False)
