@@ -1,6 +1,6 @@
+import numpy as np
 np.random.seed(12345)
 
-import numpy as np
 import os
 os.environ['KERAS_BACKEND'] = 'theano'
 from keras.models import Sequential, load_model, Model
@@ -13,10 +13,8 @@ from keras import layers
 from keras import models
 from keras.layers.advanced_activations import LeakyReLU
 from keras.utils import np_utils
-from keras.callbacks import EarlyStopping, ModelCheckpoint
 from data_flow import batch_generator
 import os.path
-
 
 
 def make_trainable(model, value):
@@ -30,7 +28,7 @@ def create_discriminator_mini_batch(true_mini_batch_center, generated_mini_batch
 	target_mini_batch = np.zeros([2*mini_batch_size, 2])
 
 	target_mini_batch[0:mini_batch_size, 0] = np.random.uniform(0.8, 0.99, (mini_batch_size)) #true image: target = (1,0)
-	target_mini_batch[0:mini_batch_size, 1] = 1.0 - targets_discriminator[0:batch_size, 0]  
+	target_mini_batch[0:mini_batch_size, 1] = 1.0 - target_mini_batch[0:mini_batch_size, 0]  
 	target_mini_batch[mini_batch_size:, 0] = np.random.uniform(0.01, 0.2, (mini_batch_size)) #fake image: target = (0,1)
 	target_mini_batch[mini_batch_size:, 1] = 1.0 - target_mini_batch[mini_batch_size:, 0]
 		
@@ -43,7 +41,7 @@ context = layers.Input(shape=(64, 64, 3))
 center = layers.Input(shape=(32, 32, 3))
 center_padded = ZeroPadding2D(padding=(16, 16)) (center)
 merged = layers.add([center_padded, context])
-merger = models.Model([center, context], merged)
+merger_model = models.Model([center, context], merged)
 
 # Loading pre-trained encoder
 enc = load_model('encoder.h5')
@@ -121,7 +119,7 @@ encoded_input = enc(input_to_encode)
 generated = gen(encoded_input)
 
 make_trainable(disc, False)
-disc_output = discriminator([generated, true_input])
+disc_output = disc([generated, true_input])
 
 GAN = models.Model([input_to_encode, true_input], disc_output)
 
@@ -140,7 +138,7 @@ mini_batch_size = 32
 true_train_size = 82611
 
 epochs = 100
-chunks = int(np.ceil(train_size/chunk_size))
+chunks = int(np.ceil(true_train_size/chunk_size))
 
 #i = epoch
 
