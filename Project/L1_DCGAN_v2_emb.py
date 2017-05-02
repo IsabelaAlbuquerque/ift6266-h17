@@ -156,19 +156,19 @@ chunks = int(np.ceil(true_train_size/chunk_size))
 
 for i in xrange(0, epochs):
 
-	data_generator = batch_generator_with_embeddings(hdf5_name='train_data.hdf', hdf5_name_captions_emb='embeddings_train_norm.hdf', data_size=train_size, load_captions_emb=True, batch_size=batch_size)
+	data_generator = batch_generator_with_embeddings(hdf5_name='train_data.hdf', hdf5_name_captions_emb='embeddings_train_norm.hdf', data_size=true_train_size, load_captions_emb=True, batch_size=chunk_size)
 
 	for k in range(chunks):
 
 		context_batch, centers_batch, captions_batch = next(data_generator)
 
-		current_chunk_size = context.shape[0]
+		current_chunk_size = context_batch.shape[0]
 		number_of_mini_batches = int(np.ceil(current_chunk_size/mini_batch_size))
 
 		for j in range(number_of_mini_batches):
 
-			context_mini_batch = context[j*mini_batch_size:min((j+1)*mini_batch_size, current_chunk_size)]
-			true_center_mini_batch = true_center[j*mini_batch_size:min((j+1)*mini_batch_size, current_chunk_size)]
+			context_mini_batch = context_batch[j*mini_batch_size:min((j+1)*mini_batch_size, current_chunk_size)]
+			true_center_mini_batch = centers_batch[j*mini_batch_size:min((j+1)*mini_batch_size, current_chunk_size)]
 			captions_mini_batch = captions_batch[j*mini_batch_size:min((j+1)*mini_batch_size, current_chunk_size)]
 
 			current_mini_batch_size = context_mini_batch.shape[0]
