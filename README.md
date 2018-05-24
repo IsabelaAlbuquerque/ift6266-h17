@@ -1,3 +1,2 @@
-# IFT6266
-Repository of the Deep Learning course (IFT6266) @ Université de Montréal
+# IFT6266 project - Conditional image generation
 Project blog: https://isabelaalb.wordpress.com/
